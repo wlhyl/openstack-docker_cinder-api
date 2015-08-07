@@ -12,6 +12,7 @@
 - /opt/openstack/log/designate-api/: /var/log/designate/
 
 # 启动cinder-api
+```bash
 docker run -d --name cinder-api \
     -p 9001:9001 \
     -v /opt/openstack/cinder-api/:/etc/cinder \
@@ -25,3 +26,4 @@ docker run -d --name cinder-api \
     -e CINDER_PASS=cinder \
     -e MY_IP=10.64.0.52 \
     10.64.0.50:5000/lzh/cinder-api:kilo
+```
