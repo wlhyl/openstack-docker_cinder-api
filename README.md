@@ -14,7 +14,7 @@
 # 启动cinder-api
 ```bash
 docker run -d --name cinder-api \
-    -p 9001:9001 \
+    -p 8776:8776 \
     -v /opt/openstack/cinder-api/:/etc/cinder \
     -v /opt/openstack/log/cinder-api/:/var/log/cinder/ \
     -e CINDER_DB=10.64.0.52 \
