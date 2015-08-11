@@ -70,7 +70,9 @@ if [ ! -f /etc/cinder/.complete ];then
     $CRUDINI --set /etc/cinder/cinder.conf keystone_authtoken username cinder
     $CRUDINI --set /etc/cinder/cinder.conf keystone_authtoken password $CINDER_PASS
 
-    $CRUDINI --set /etc/nova/nova.conf DEFAULT my_ip $MY_IP
+    $CRUDINI --set /etc/cinder/cinder.conf DEFAULT my_ip $MY_IP
+    # 使用 glance api v2
+    $CRUDINI --set /etc/cinder/cinderconf DEFAULT glance_api_version 2
 
     $CRUDINI --set /etc/cinder/cinder.conf oslo_concurrency lock_path /var/lock/cinder
 
