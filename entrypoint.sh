@@ -30,8 +30,13 @@ if [ -z "$CINDER_PASS" ];then
   exit 1
 fi
 
-if [ -z "$KEYSTONE_ENDPOINT" ];then
-  echo "error: KEYSTONE_ENDPOINT not set"
+if [ -z "$KEYSTONE_INTERNAL_ENDPOINT" ];then
+  echo "error: KEYSTONE_INTERNAL_ENDPOINT not set"
+  exit 1
+fi
+
+if [ -z "$KEYSTONE_ADMIN_ENDPOINT" ];then
+  echo "error: KEYSTONE_ADMIN_ENDPOINT not set"
   exit 1
 fi
 
@@ -47,8 +52,6 @@ CONNECTION=mysql://cinder:$CINDER_DBPASS@$CINDER_DB/cinder
 if [ ! -f /etc/cinder/.complete ];then
     cp -rp /cinder/* /etc/cinder
 
-    chown cinder:cinder /var/log/cinder/
-
     $CRUDINI --set /etc/cinder/cinder.conf database connection $CONNECTION
 
     $CRUDINI --set /etc/cinder/cinder.conf DEFAULT rpc_backend rabbit
@@ -61,8 +64,8 @@ if [ ! -f /etc/cinder/.complete ];then
 
     $CRUDINI --del /etc/cinder/cinder.conf keystone_authtoken
 
-    $CRUDINI --set /etc/cinder/cinder.conf keystone_authtoken auth_uri http://$KEYSTONE_ENDPOINT:5000
-    $CRUDINI --set /etc/cinder/cinder.conf keystone_authtoken auth_url http://$KEYSTONE_ENDPOINT:35357
+    $CRUDINI --set /etc/cinder/cinder.conf keystone_authtoken auth_uri http://$KEYSTONE_INTERNAL_ENDPOINT:5000
+    $CRUDINI --set /etc/cinder/cinder.conf keystone_authtoken auth_url http://$KEYSTONE_ADMIN_ENDPOINT:35357
     $CRUDINI --set /etc/cinder/cinder.conf keystone_authtoken auth_plugin password
     $CRUDINI --set /etc/cinder/cinder.conf keystone_authtoken project_domain_id default
     $CRUDINI --set /etc/cinder/cinder.conf keystone_authtoken user_domain_id default
@@ -84,5 +87,7 @@ echo 'select * from volumes limit 1;' | mysql -h$CINDER_DB  -ucinder -p$CINDER_D
 if [ $? != 0 ];then
     su -s /bin/sh -c "cinder-manage db sync" cinder
 fi
+
+chown -R cinder:cinder /var/log/cinder/
 
 /usr/bin/supervisord -n
