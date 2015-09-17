@@ -18,6 +18,7 @@ RUN env --unset=DEBIAN_FRONTEND
 
 RUN cp -rp /etc/cinder/ /cinder
 RUN rm -rf /var/log/cinder/*
+RUN rm -rf /var/lib/cinder/cinder.sqlite
 
 VOLUME ["/etc/cinder"]
 VOLUME ["/var/log/cinder"]
