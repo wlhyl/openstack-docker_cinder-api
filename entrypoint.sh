@@ -82,12 +82,12 @@ if [ ! -f /etc/cinder/.complete ];then
     touch /etc/cinder/.complete
 fi
 
+chown -R cinder:cinder /var/log/cinder/
+
 # 同步数据库
 echo 'select * from volumes limit 1;' | mysql -h$CINDER_DB  -ucinder -p$CINDER_DBPASS cinder
 if [ $? != 0 ];then
     su -s /bin/sh -c "cinder-manage db sync" cinder
 fi
-
-chown -R cinder:cinder /var/log/cinder/
 
 /usr/bin/supervisord -n
