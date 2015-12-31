@@ -77,7 +77,8 @@ if [ ! -f /etc/cinder/.complete ];then
     # 使用 glance api v2
     $CRUDINI --set /etc/cinder/cinderconf DEFAULT glance_api_version 2
 
-    $CRUDINI --set /etc/cinder/cinder.conf oslo_concurrency lock_path /var/lock/cinder
+    $CRUDINI --set /etc/cinder/cinder.conf oslo_concurrency lock_path /var/lib/cinder/tmp
+    $CRUDINI --set /etc/cinder/cinder.conf DEFAULT state_path /var/lib/cinder
 
     touch /etc/cinder/.complete
 fi
